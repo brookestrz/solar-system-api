@@ -32,7 +32,7 @@ We will focus on creating RESTful endpoints for CRUD operations.
 ## Guidelines for Pair-Programming
 
 - The driver is the person who is at the keyboard and mouse
-- The navigator is the person who is thinking out loud, actively collaborating with the driver about the next step, and helping guide the development
+- The navigator is the person who is thinking
 - Trade-off driver and navigator roles often, at least daily, or every hour for longer work sessions.
 - Take time to make sure you're on the same page
 
