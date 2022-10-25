@@ -24,7 +24,14 @@ planets_bp = Blueprint("planets_bp",__name__,url_prefix="/planets")
 def get_all_planets():  
     planets_response = [vars(planet) for planet in PLANETS]
 
-
     return jsonify(planets_response)
 
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def handle_planet(planet_id): 
+    planet_id = int(planet_id)
+    for planet in PLANETS: 
+        if planet.id == planet_id:
+            return { "id": planet.id, "description": planet.description, 
+                    "known_moons": planet.known_moons
+                }
 
