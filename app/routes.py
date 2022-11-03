@@ -20,9 +20,9 @@ def read_all_planets():
     name_query = request.args.get("name")
     if name_query:
         planets = Planet.query.filter_by(name=name_query)
-    else:
-        planets = Planet.query.all()
     
+    planets = Planet.query.all()
+    print(planets)
     planets_response = []
     for planet in planets:
         planets_response.append({
@@ -31,8 +31,12 @@ def read_all_planets():
             "description": planet.description,
             "known_moons":planet.known_moons
         })
+    #if not planets_response:
+        #return make_response("Invalid request",400)
     return jsonify(planets_response)
-
+    # print(planets_response)
+    # return {"hello": "hi"}
+    # return make_response(planets_response)
 
 def validate_planet(planet_id):
     try:
@@ -56,3 +60,26 @@ def read_one_planet(planet_id):
         "description":planet.description,
         "known_moons":planet.known_moons
     }
+
+@planets_bp.route("/<planet_id>", methods=["PUT"])
+def update_planet(planet_id):
+    planet = validate_planet(planet_id)
+    
+    request_body = request.get_json()
+
+    planet.name = request_body["name"]
+    planet.description = request_body["description"]
+    planet.known_moons = request_body["known_moons"]
+
+    db.session.commit()
+
+    return make_response(f"Planet #{planet.id} successfully updated")
+
+@planets_bp.route("/<planet_id>", methods=["DELETE"])
+def delete_planet(planet_id):
+    planet = validate_planet(planet_id)
+
+    db.session.delete(planet)
+    db.session.commit()
+
+    return make_response(f"planet #{planet.id} successfully deleted")
