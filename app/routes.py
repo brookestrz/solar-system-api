@@ -1,8 +1,11 @@
 from app import db
 from app.models.planets import Planet
+from app.models.moon import Moon
 from flask import Blueprint, jsonify, make_response, request, abort
 
 planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
+moons_bp = Blueprint("moons_bp", __name__, url_prefix="/moons")
+
 
 @planets_bp.route("", methods=["POST"])
 def create_planet():
@@ -83,3 +86,33 @@ def delete_planet(planet_id):
     db.session.commit()
 
     return make_response(f"planet #{planet.id} successfully deleted")
+
+
+
+
+@moons_bp.route("", methods=["POST"])
+def create_moon():
+    request_body = request.get_json()
+    new_moon = (Moon(size=request_body["size"],
+                 description=request_body["description"]))
+                    
+
+    db.session.add(new_moon)
+    db.session.commit()
+
+    return make_response(jsonify(f"Moon {new_moon.name} successfully created"), 201)
+
+@moons_bp.route("", methods=["GET"])
+def read_all_moons():
+    
+    moons = Moon.query.all()
+
+    moons_response = []
+    for moon in moons:
+        moons_response.append(
+       {
+                "size": moon.size,
+                "description": moon.description
+            })
+    
+    return jsonify(moons_response)

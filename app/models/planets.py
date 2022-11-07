@@ -59,3 +59,22 @@ class Planet(db.Model):
     name = db.Column(db.String)
     description = db.Column(db.String)
     known_moons = db.Column(db.Integer)
+    moon_id = db.Column(db.Integer, db.ForeignKey('moon.id'))
+    moon = db.relationship("Moon", back_populates="planets")
+
+
+    def to_dict(self):
+        planet_as_dict = {}
+        planet_as_dict["id"] = self.id
+        planet_as_dict["name"] = self.name
+        planet_as_dict["description"] = self.description
+        planet_as_dict["known_moons"] = self.known_moons
+
+        return planet_as_dict
+
+    # # @classmethod
+    # def from_dict(cls, book_data):
+    #     new_book = Book(title=book_data["title"],
+    #                     description=book_data["description"])
+    #     return new_book
+
